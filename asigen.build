@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project name="asigen" default="build">
+	<property name="build.dir" value="bin"/>
+	<property name="src.dir" value="src"/>
+	<property name="lib.dir" value="lib"/>
+
+	<target name="clean" description="Remove all generated files">
+		<delete dir="${build.dir}" if="${directory::exists('bin')}" />
+	</target>
+
+	<target name="build" description="compiles ASIGenerator executable" depends="libs,dirs">
+		<csc target="exe" output="${build.dir}/asigen.exe">
+			<sources>
+				<include name="${src.dir}/ASIGenerator/Core/*.cs" />
+				<include name="${src.dir}/ASIGenerator/Console/*.cs" />
+			</sources>
+			<references>
+				<include name="${build.dir}/AS2Parser.dll"/>
+				<include name="${build.dir}/Mono.GetOptions.dll"/>
+			</references>
+		</csc>
+	</target>
+	
+	<target name="libs" description="compiles/copies the necessary library files" depends="dirs">
+		<csc target="library" output="bin/AS2Parser.dll">
+			<sources>
+				<include name="${src.dir}/AS2Parser/*.cs" />
+			</sources>
+		</csc>
+		<copy file="${lib.dir}/Mono.GetOptions.dll" todir="${build.dir}"/>
+	</target>
+	
+	<target name="dirs" description="creates the nesessary directories">
+		<mkdir dir="${build.dir}"/>
+	</target>
+</project>
